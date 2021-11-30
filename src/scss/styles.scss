@@ -68,7 +68,7 @@ h2 {
     right: 24px;
     padding: 15px 15px 5px;
     position: absolute;
-    bottom: 20px;
+    bottom: 10px;
     width: 130px;
     // z-index: 3;
     label {
@@ -77,6 +77,21 @@ h2 {
       font-size: 12px;
       line-height: 12px;
       text-transform: uppercase;
+    }
+    #actif {
+      i {
+        color: #2f9c67;
+      }
+    }
+    #inactive {
+      i {
+        color: #d1021a;
+      }
+    }
+    #pipeline {
+      i {
+        color: #fccf9e;
+      }
     }
     h5 {
       font-family: "Gotham-Bold", sans-serif;
@@ -155,8 +170,11 @@ h2 {
 }
 
 .purpose {
-  span {
-    font-weight: bold;
+  display: inline;
+  h6 {
+    span {
+      font-weight: bold;
+    }
   }
 }
 
@@ -191,32 +209,32 @@ table.dataTable thead td {
   /* padding-left: 35px; */
 }
 
-#statusLegend {
-  padding-left: 10px;
-  #actif {
-    i {
-      color: #2f9c67;
-    }
-  }
-  #inactive {
-    i {
-      color: #d90368;
-    }
-  }
-  #pipeline {
-    i {
-      color: #fccf9e;
-    }
-  }
-}
+// #statusLegend {
+//   padding-left: 10px;
+//   #actif {
+//     i {
+//       color: #2f9c67;
+//     }
+//   }
+//   #inactive {
+//     i {
+//       color: #d90368;
+//     }
+//   }
+//   #pipeline {
+//     i {
+//       color: #fccf9e;
+//     }
+//   }
+// }
 
 a {
-  color: #2f9c67;
+  color: #204669;
 }
 
-.footer {
-  display: inline;
-  .submit {
-    float: right;
-  }
-}
+// .footer {
+//   display: inline;
+//   .submit {
+//     float: right;
+//   }
+// }

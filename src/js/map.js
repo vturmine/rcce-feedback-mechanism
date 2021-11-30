@@ -68,8 +68,19 @@ function initiateMap() {
       var countryCfmData = filteredCfmData.filter(c => c['ISO3'] == d.properties.ISO_A3);
       if (countryCfmData.length != 0) {
         var content = '<h5>' + d.properties.NAME_LONG + '</h5>';
-
-        // content += '# CFM : ' + countryCfmData.length+ '<br/> Add purpose';
+        var numActive = 0, 
+            numInactive = 0, 
+            numPipeline = 0;
+        countryCfmData.forEach(element => {
+          element['Status'] == 'Active' ? numActive++ :
+          element['Status'] == 'Inactive' ? numInactive++ :
+          element['Status'] == 'Pipeline' ? numPipeline++ : null;
+        });
+        content += '<div>' +
+              '<label><i class="fa fa-circle fa-sm" style="color:#2F9C67;"></i> '+numActive+'</label>&nbsp; ' +
+              '<label><i class="fa fa-circle fa-sm" style="color:#d1021a;"></i> '+numPipeline+'</label>&nbsp; ' +
+              '<label><i class="fa fa-circle fa-sm" style="color:#FCCF9E;"></i> '+numInactive+'</label>' +
+              '</div>';
 
         showMapTooltip(d, maptip, content);
       }
@@ -147,15 +158,15 @@ function zoomToRegion(region){
   }
 
 // on focus layer change
-$('input[type="radio"]').click(function(){
-  var selected = $('input[name="focus"]:checked');
-  choroplethMap(selected.val());
-  // reset datatable : test if there is country selection from the map first
-  if (countrySelectedFromMap) {
-    var dt = getDataTableData();
-    $('.purpose > h6 > span').text("(Select Country)");
-    $('#datatable').dataTable().fnClearTable();
-    $('#datatable').dataTable().fnAddData(dt);
-  }
-  countrySelectedFromMap = false;
-});
+// $('input[type="radio"]').click(function(){
+//   var selected = $('input[name="focus"]:checked');
+//   choroplethMap(selected.val());
+//   // reset datatable : test if there is country selection from the map first
+//   if (countrySelectedFromMap) {
+//     var dt = getDataTableData();
+//     $('.purpose > h6 > span').text("(Select Country)");
+//     $('#datatable').dataTable().fnClearTable();
+//     $('#datatable').dataTable().fnAddData(dt);
+//   }
+//   countrySelectedFromMap = false;
+// });
