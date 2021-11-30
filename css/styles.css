@@ -1126,7 +1126,7 @@ h2 {
     right: 24px;
     padding: 15px 15px 5px;
     position: absolute;
-    bottom: 20px;
+    bottom: 10px;
     width: 130px; }
     #map .focus-layer label {
       fill: #000;
@@ -1134,6 +1134,12 @@ h2 {
       font-size: 12px;
       line-height: 12px;
       text-transform: uppercase; }
+    #map .focus-layer #actif i {
+      color: #2f9c67; }
+    #map .focus-layer #inactive i {
+      color: #d1021a; }
+    #map .focus-layer #pipeline i {
+      color: #fccf9e; }
     #map .focus-layer h5 {
       font-family: "Gotham-Bold", sans-serif;
       font-size: 13px;
@@ -1196,8 +1202,10 @@ h2 {
   margin: 20px 0;
   width: 100%; }
 
-.purpose span {
-  font-weight: bold; }
+.purpose {
+  display: inline; }
+  .purpose h6 span {
+    font-weight: bold; }
 
 #datatable.dataTable td {
   font-size: 14px; }
@@ -1219,19 +1227,5 @@ table.dataTable thead td {
   font-size: 16px;
   /* padding-left: 35px; */ }
 
-#statusLegend {
-  padding-left: 10px; }
-  #statusLegend #actif i {
-    color: #2f9c67; }
-  #statusLegend #inactive i {
-    color: #d90368; }
-  #statusLegend #pipeline i {
-    color: #fccf9e; }
-
 a {
-  color: #2f9c67; }
-
-.footer {
-  display: inline; }
-  .footer .submit {
-    float: right; }
+  color: #204669; }

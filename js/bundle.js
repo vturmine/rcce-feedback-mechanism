@@ -4,6 +4,10 @@ let ifrcPink_1 = '#D90368', ifrcPink_2 = '#E27093', ifrcPink_3 = '#E996AD', ifrc
 let ifrcGreen_1 = '#2F9C67', ifrcGreen_2 = '#78B794', ifrcGreen_3 = '#9EC8AE', ifrcGreen_4 = '#C2DACA', ifrcGreen_5 = '#E9F1EA';
 let ifrcBlue_1 = '#204669', ifrcBlue_2 = '#546B89', ifrcBlue_3 = '#798BA5', ifrcBlue_4 = '#A6B0C3', ifrcBlue_5 = '#DBDEE6';
 let ifrcYellow = '#FCCF9E';
+let mapActiveColor = ifrcGreen_1,
+    mapInactiveColor = '#d1021a',
+    mapPipelineColor = ifrcYellow;
+
 var mapColorRangeDefault = [ifrcBlue_3, ifrcBlue_2, ifrcBlue_1];
 // let mapInactive = '#a6d8e8';
 
@@ -161,47 +165,42 @@ function generateBarChart(){
 	return chart;
 } //generateBarChart 
 
+// return mapActiveColor, mapInactiveColor or mapPipelineColor based on the corresponding status
+function getColorFromStatus(status) {
+    var st = status.trim().toLowerCase();
+    var clr = mapInactive;
+    st == 'active' ? clr = mapActiveColor : 
+    st == 'inactive' ? clr = mapInactiveColor :
+    st == 'pipeline' ? clr = mapPipelineColor : null;
+    return clr;
+} //getColorFromStatus 
+
+// get country CFM color
+function getRightCountryCFMColor(data){
+    var color ;
+    if (data.length == 0) {
+        color = mapInactive;//getColorFromStatus(data['Status']);
+    } else if(data.length > 0) {
+        var colors = [];
+        for (let index = 0; index < data.length; index++) {
+            var c = getColorFromStatus(data[index]['Status']);
+            colors.includes(c) ? '' : colors.push(c);            
+        }
+        colors.includes(mapActiveColor) ? color = mapActiveColor :
+        colors.includes(mapPipelineColor) ? color = mapPipelineColor :
+        colors.includes(mapInactiveColor) ? color = mapInactiveColor : null;
+        
+    }
+    return color;
+}
 // choropleth map
 function choroplethMap(focusArea = "all"){
-    var dataByFocus  = filteredCfmData;
-    var mapStatusColor = ifrcGreen_1;
-    if (focusArea != "all") {
-        dataByFocus = filteredCfmData.filter(function(d){
-            return d['Status'].toLowerCase() == focusArea;
+    mapsvg.selectAll('path').each( function(element, index) {
+        d3.select(this).transition().duration(500).attr('fill', function(d){
+            var filtered = filteredCfmData.filter(pt => pt['ISO3']== d.properties.ISO_A3);
+            return getRightCountryCFMColor(filtered);
         });
-        focusArea == 'inactive' ? mapStatusColor =  ifrcPink_1: 
-        focusArea =='pipeline' ? mapStatusColor = ifrcYellow : null;
-    }
-    var data = d3.nest()
-        .key(function(d){ return d['ISO3']; })
-        .rollup(function(d){ return d.length; })
-        .entries(dataByFocus).sort(sort_value);
-
-    var max = data[0].value;
-    var mapScale = d3.scaleQuantize()
-            .domain([0, max])
-            .range(mapColorRangeDefault);
-    
-    if (focusArea != "all") {
-        var arrCountries = [];
-        data.forEach(element => {
-            arrCountries.push(element.key);
-        });
-        mapsvg.selectAll('path').each( function(element, index) {
-            d3.select(this).transition().duration(500).attr('fill', function(d){
-                return arrCountries.includes(d.properties.ISO_A3) ? mapStatusColor : mapInactive ;
-            });
-        });
-    } else {
-        mapsvg.selectAll('path').each( function(element, index) {
-            d3.select(this).transition().duration(500).attr('fill', function(d){
-                var filtered = data.filter(pt => pt.key== d.properties.ISO_A3);
-                var num = (filtered.length != 0) ? filtered[0].value : null ;
-                var clr = (num == null) ? '#F2F2EF' : mapScale(num);
-                return clr;
-            });
-        });
-    }
+    });
 }
 
 // update viz based on filtered and selections
@@ -298,8 +297,19 @@ function initiateMap() {
       var countryCfmData = filteredCfmData.filter(c => c['ISO3'] == d.properties.ISO_A3);
       if (countryCfmData.length != 0) {
         var content = '<h5>' + d.properties.NAME_LONG + '</h5>';
-
-        // content += '# CFM : ' + countryCfmData.length+ '<br/> Add purpose';
+        var numActive = 0, 
+            numInactive = 0, 
+            numPipeline = 0;
+        countryCfmData.forEach(element => {
+          element['Status'] == 'Active' ? numActive++ :
+          element['Status'] == 'Inactive' ? numInactive++ :
+          element['Status'] == 'Pipeline' ? numPipeline++ : null;
+        });
+        content += '<div>' +
+              '<label><i class="fa fa-circle fa-sm" style="color:#2F9C67;"></i> '+numActive+'</label>&nbsp; ' +
+              '<label><i class="fa fa-circle fa-sm" style="color:#d1021a;"></i> '+numPipeline+'</label>&nbsp; ' +
+              '<label><i class="fa fa-circle fa-sm" style="color:#FCCF9E;"></i> '+numInactive+'</label>' +
+              '</div>';
 
         showMapTooltip(d, maptip, content);
       }
@@ -377,18 +387,18 @@ function zoomToRegion(region){
   }
 
 // on focus layer change
-$('input[type="radio"]').click(function(){
-  var selected = $('input[name="focus"]:checked');
-  choroplethMap(selected.val());
-  // reset datatable : test if there is country selection from the map first
-  if (countrySelectedFromMap) {
-    var dt = getDataTableData();
-    $('.purpose > h6 > span').text("(Select Country)");
-    $('#datatable').dataTable().fnClearTable();
-    $('#datatable').dataTable().fnAddData(dt);
-  }
-  countrySelectedFromMap = false;
-});
+// $('input[type="radio"]').click(function(){
+//   var selected = $('input[name="focus"]:checked');
+//   choroplethMap(selected.val());
+//   // reset datatable : test if there is country selection from the map first
+//   if (countrySelectedFromMap) {
+//     var dt = getDataTableData();
+//     $('.purpose > h6 > span').text("(Select Country)");
+//     $('#datatable').dataTable().fnClearTable();
+//     $('#datatable').dataTable().fnAddData(dt);
+//   }
+//   countrySelectedFromMap = false;
+// });
 let geodataUrl = 'data/worldmap.json';
 let cfmDataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbPRrmlDfV3WzI-5QizI2ig2AoJo84KS7pSQtXkUiV5BD3s4uxpXqW8rK2sHmNjP2yCavO1XasLyCe/pub?gid=651254408&single=true&output=csv';
 
