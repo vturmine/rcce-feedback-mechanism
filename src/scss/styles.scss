@@ -11,7 +11,7 @@ body {
 }
 
 h2 {
-  padding-top: 10px;
+  padding-top: 5px;
   font-family: "Source Sans Pro", sans-serif;
   font-size: 22px;
   line-height: 22px;
@@ -30,7 +30,8 @@ h2 {
   width: 100%;
   height: 500px;
   padding-top: 10px;
-  fill: #a6d8e8;
+  // fill: #a6d8e8;
+  fill: #cdd4d9;
   position: relative;
   .zoom-controls {
     position: absolute;
@@ -180,7 +181,7 @@ h2 {
 
 // table content font
 #datatable.dataTable td {
-  font-size: 14px;
+  font-size: 13px;
   // .fa-circle {
   //   color: red;
   // }

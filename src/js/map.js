@@ -3,20 +3,20 @@ let currentZoom = 1;
 
 let countrySelectedFromMap = false;
 let mapFillColor = '#9EC8AE', 
-    mapInactive = '#f1f1ee',//'#C2C4C6',
+    mapInactive = '#fff',//'#f1f1ee',//'#C2C4C6',
     mapActive = '#2F9C67',
     hoverColor = '#78B794';
 
 function initiateMap() {
     width = $('#map').width();
     height = 500;
-    var mapScale = width/5.2;
+    var mapScale = width/7.8;
     var mapCenter = [25, 25];
 
     projection = d3.geoMercator()
         .center(mapCenter)
         .scale(mapScale)
-        .translate([width / 2, height / 3]);
+        .translate([width / 2, height / 1.9]);
 
     path = d3.geoPath().projection(projection);
 
@@ -51,6 +51,27 @@ function initiateMap() {
               var className = (countriesISO3Arr.includes(d.properties.ISO_A3)) ? 'hasCFM' : 'inactive';
               return className;
           });
+    // cercles 
+    // var centroids = mapsvg.append("g")
+    //       .attr("class", "centroids")
+    //       .selectAll("centroid")
+    //       .data(locations)
+    //       .enter()
+    //         .append("g")
+    //         // .append("centroid")
+    //         .append("circle")
+    //         .attr('id', function(d){ 
+    //           return d["ISO_A3"]; 
+    //         })
+    //         .attr('class', function(d){
+    //           var className = (countriesISO3Arr.includes(d["ISO_A3"])) ? 'hasCFM' : 'inactive';
+    //           return className;
+    //       })
+    //       .attr("transform", function(d){ return "translate(" + projection([d.X, d.Y]) + ")"; });
+    mapsvg.transition()
+    .duration(750)
+    .call(zoom.transform, d3.zoomIdentity);
+
     choroplethMap();
 
     //zoom controls
@@ -77,9 +98,9 @@ function initiateMap() {
           element['Status'] == 'Pipeline' ? numPipeline++ : null;
         });
         content += '<div>' +
-              '<label><i class="fa fa-circle fa-sm" style="color:#2F9C67;"></i> '+numActive+'</label>&nbsp; ' +
-              '<label><i class="fa fa-circle fa-sm" style="color:#d1021a;"></i> '+numPipeline+'</label>&nbsp; ' +
-              '<label><i class="fa fa-circle fa-sm" style="color:#FCCF9E;"></i> '+numInactive+'</label>' +
+              '<div><label><i class="fa fa-circle fa-sm" style="color:#2F9C67;"></i> Active ('+numActive+')</label></div>' +
+              '<div><label><i class="fa fa-circle fa-sm" style="color:#d1021a;"></i> Pipeline ('+numPipeline+')</label></div>' +
+              '<div><label><i class="fa fa-circle fa-sm" style="color:#FCCF9E;"></i> Iinactive ('+numInactive+')</label></div>' +
               '</div>';
 
         showMapTooltip(d, maptip, content);

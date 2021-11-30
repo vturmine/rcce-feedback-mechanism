@@ -3,9 +3,9 @@ let ifrcPink_1 = '#D90368', ifrcPink_2 = '#E27093', ifrcPink_3 = '#E996AD', ifrc
 let ifrcGreen_1 = '#2F9C67', ifrcGreen_2 = '#78B794', ifrcGreen_3 = '#9EC8AE', ifrcGreen_4 = '#C2DACA', ifrcGreen_5 = '#E9F1EA';
 let ifrcBlue_1 = '#204669', ifrcBlue_2 = '#546B89', ifrcBlue_3 = '#798BA5', ifrcBlue_4 = '#A6B0C3', ifrcBlue_5 = '#DBDEE6';
 let ifrcYellow = '#FCCF9E';
-let mapActiveColor = ifrcGreen_1,
-    mapInactiveColor = '#d1021a',
-    mapPipelineColor = ifrcYellow;
+let mapActiveColor = ifrcBlue_1,
+    mapInactiveColor = ifrcBlue_3,//'#d1021a',
+    mapPipelineColor = ifrcBlue_5;
 
 var mapColorRangeDefault = [ifrcBlue_3, ifrcBlue_2, ifrcBlue_1];
 // let mapInactive = '#a6d8e8';
@@ -165,7 +165,12 @@ function generateBarChart(){
 } //generateBarChart 
 
 // return mapActiveColor, mapInactiveColor or mapPipelineColor based on the corresponding status
-function getColorFromStatus(status) {
+function getColorFromStatus(status, cercle = false) {
+    if (cercle){
+        mapActiveColor = ifrcGreen_1,
+        mapPipelineColor = ifrcYellow,
+        mapInactiveColor = 'grey';
+    }
     var st = status.trim().toLowerCase();
     var clr = mapInactive;
     st == 'active' ? clr = mapActiveColor : 
@@ -175,14 +180,19 @@ function getColorFromStatus(status) {
 } //getColorFromStatus 
 
 // get country CFM color
-function getRightCountryCFMColor(data){
+function getRightCountryCFMColor(data, cercle = false){
+    if (cercle){
+        mapActiveColor = ifrcGreen_1,
+        mapPipelineColor = ifrcYellow,
+        mapInactiveColor = 'grey';
+    }
     var color ;
     if (data.length == 0) {
         color = mapInactive;//getColorFromStatus(data['Status']);
     } else if(data.length > 0) {
         var colors = [];
         for (let index = 0; index < data.length; index++) {
-            var c = getColorFromStatus(data[index]['Status']);
+            var c = getColorFromStatus(data[index]['Status'], cercle  = cercle);
             colors.includes(c) ? '' : colors.push(c);            
         }
         colors.includes(mapActiveColor) ? color = mapActiveColor :
@@ -195,11 +205,21 @@ function getRightCountryCFMColor(data){
 // choropleth map
 function choroplethMap(focusArea = "all"){
     mapsvg.selectAll('path').each( function(element, index) {
+        // console.log(element)
         d3.select(this).transition().duration(500).attr('fill', function(d){
             var filtered = filteredCfmData.filter(pt => pt['ISO3']== d.properties.ISO_A3);
             return getRightCountryCFMColor(filtered);
         });
     });
+    // cercle
+    // mapsvg.selectAll('circle').each( function(element, index) {
+    //     // console.log(element)
+    //     d3.select(this).transition().duration(500).attr("r", 3).attr('fill', function(d){
+    //         var filtered = filteredCfmData.filter(pt => pt['ISO3']== d['ISO_A3']);
+    //         // console.log(filtered)
+    //         return getRightCountryCFMColor(filtered, true);
+    //     });
+    // });
 }
 
 // update viz based on filtered and selections
