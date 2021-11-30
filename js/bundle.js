@@ -4,9 +4,9 @@ let ifrcPink_1 = '#D90368', ifrcPink_2 = '#E27093', ifrcPink_3 = '#E996AD', ifrc
 let ifrcGreen_1 = '#2F9C67', ifrcGreen_2 = '#78B794', ifrcGreen_3 = '#9EC8AE', ifrcGreen_4 = '#C2DACA', ifrcGreen_5 = '#E9F1EA';
 let ifrcBlue_1 = '#204669', ifrcBlue_2 = '#546B89', ifrcBlue_3 = '#798BA5', ifrcBlue_4 = '#A6B0C3', ifrcBlue_5 = '#DBDEE6';
 let ifrcYellow = '#FCCF9E';
-let mapActiveColor = ifrcGreen_1,
-    mapInactiveColor = '#d1021a',
-    mapPipelineColor = ifrcYellow;
+let mapActiveColor = ifrcBlue_1,
+    mapInactiveColor = ifrcBlue_3,//'#d1021a',
+    mapPipelineColor = ifrcBlue_5;
 
 var mapColorRangeDefault = [ifrcBlue_3, ifrcBlue_2, ifrcBlue_1];
 // let mapInactive = '#a6d8e8';
@@ -166,7 +166,12 @@ function generateBarChart(){
 } //generateBarChart 
 
 // return mapActiveColor, mapInactiveColor or mapPipelineColor based on the corresponding status
-function getColorFromStatus(status) {
+function getColorFromStatus(status, cercle = false) {
+    if (cercle){
+        mapActiveColor = ifrcGreen_1,
+        mapPipelineColor = ifrcYellow,
+        mapInactiveColor = 'grey';
+    }
     var st = status.trim().toLowerCase();
     var clr = mapInactive;
     st == 'active' ? clr = mapActiveColor : 
@@ -176,14 +181,19 @@ function getColorFromStatus(status) {
 } //getColorFromStatus 
 
 // get country CFM color
-function getRightCountryCFMColor(data){
+function getRightCountryCFMColor(data, cercle = false){
+    if (cercle){
+        mapActiveColor = ifrcGreen_1,
+        mapPipelineColor = ifrcYellow,
+        mapInactiveColor = 'grey';
+    }
     var color ;
     if (data.length == 0) {
         color = mapInactive;//getColorFromStatus(data['Status']);
     } else if(data.length > 0) {
         var colors = [];
         for (let index = 0; index < data.length; index++) {
-            var c = getColorFromStatus(data[index]['Status']);
+            var c = getColorFromStatus(data[index]['Status'], cercle  = cercle);
             colors.includes(c) ? '' : colors.push(c);            
         }
         colors.includes(mapActiveColor) ? color = mapActiveColor :
@@ -196,11 +206,21 @@ function getRightCountryCFMColor(data){
 // choropleth map
 function choroplethMap(focusArea = "all"){
     mapsvg.selectAll('path').each( function(element, index) {
+        // console.log(element)
         d3.select(this).transition().duration(500).attr('fill', function(d){
             var filtered = filteredCfmData.filter(pt => pt['ISO3']== d.properties.ISO_A3);
             return getRightCountryCFMColor(filtered);
         });
     });
+    // cercle
+    // mapsvg.selectAll('circle').each( function(element, index) {
+    //     // console.log(element)
+    //     d3.select(this).transition().duration(500).attr("r", 3).attr('fill', function(d){
+    //         var filtered = filteredCfmData.filter(pt => pt['ISO3']== d['ISO_A3']);
+    //         // console.log(filtered)
+    //         return getRightCountryCFMColor(filtered, true);
+    //     });
+    // });
 }
 
 // update viz based on filtered and selections
@@ -232,20 +252,20 @@ let currentZoom = 1;
 
 let countrySelectedFromMap = false;
 let mapFillColor = '#9EC8AE', 
-    mapInactive = '#f1f1ee',//'#C2C4C6',
+    mapInactive = '#fff',//'#f1f1ee',//'#C2C4C6',
     mapActive = '#2F9C67',
     hoverColor = '#78B794';
 
 function initiateMap() {
     width = $('#map').width();
     height = 500;
-    var mapScale = width/5.2;
+    var mapScale = width/7.8;
     var mapCenter = [25, 25];
 
     projection = d3.geoMercator()
         .center(mapCenter)
         .scale(mapScale)
-        .translate([width / 2, height / 3]);
+        .translate([width / 2, height / 1.9]);
 
     path = d3.geoPath().projection(projection);
 
@@ -280,6 +300,27 @@ function initiateMap() {
               var className = (countriesISO3Arr.includes(d.properties.ISO_A3)) ? 'hasCFM' : 'inactive';
               return className;
           });
+    // cercles 
+    // var centroids = mapsvg.append("g")
+    //       .attr("class", "centroids")
+    //       .selectAll("centroid")
+    //       .data(locations)
+    //       .enter()
+    //         .append("g")
+    //         // .append("centroid")
+    //         .append("circle")
+    //         .attr('id', function(d){ 
+    //           return d["ISO_A3"]; 
+    //         })
+    //         .attr('class', function(d){
+    //           var className = (countriesISO3Arr.includes(d["ISO_A3"])) ? 'hasCFM' : 'inactive';
+    //           return className;
+    //       })
+    //       .attr("transform", function(d){ return "translate(" + projection([d.X, d.Y]) + ")"; });
+    mapsvg.transition()
+    .duration(750)
+    .call(zoom.transform, d3.zoomIdentity);
+
     choroplethMap();
 
     //zoom controls
@@ -306,9 +347,9 @@ function initiateMap() {
           element['Status'] == 'Pipeline' ? numPipeline++ : null;
         });
         content += '<div>' +
-              '<label><i class="fa fa-circle fa-sm" style="color:#2F9C67;"></i> '+numActive+'</label>&nbsp; ' +
-              '<label><i class="fa fa-circle fa-sm" style="color:#d1021a;"></i> '+numPipeline+'</label>&nbsp; ' +
-              '<label><i class="fa fa-circle fa-sm" style="color:#FCCF9E;"></i> '+numInactive+'</label>' +
+              '<div><label><i class="fa fa-circle fa-sm" style="color:#2F9C67;"></i> Active ('+numActive+')</label></div>' +
+              '<div><label><i class="fa fa-circle fa-sm" style="color:#d1021a;"></i> Pipeline ('+numPipeline+')</label></div>' +
+              '<div><label><i class="fa fa-circle fa-sm" style="color:#FCCF9E;"></i> Iinactive ('+numInactive+')</label></div>' +
               '</div>';
 
         showMapTooltip(d, maptip, content);
@@ -400,9 +441,11 @@ function zoomToRegion(region){
 //   countrySelectedFromMap = false;
 // });
 let geodataUrl = 'data/worldmap.json';
+let locationsUrl = 'data/world_locations.csv';
 let cfmDataUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSbPRrmlDfV3WzI-5QizI2ig2AoJo84KS7pSQtXkUiV5BD3s4uxpXqW8rK2sHmNjP2yCavO1XasLyCe/pub?gid=651254408&single=true&output=csv';
 
 let geomData,
+    locations,
     cfmData,
     filteredCfmData;
 
@@ -411,11 +454,13 @@ $( document ).ready(function(){
     function getData(){
         Promise.all([
             d3.json(geodataUrl),
+            d3.csv(locationsUrl),
             d3.csv(cfmDataUrl)
         ]).then(function(data){
             geomData = topojson.feature(data[0], data[0].objects.geom);
-            cfmData = data[1];
-            filteredCfmData = data[1];
+            cfmData = data[2];
+            locations = data[1];
+            filteredCfmData = data[2];
             setCountriesAndOrgCFM();
             regionSelectionDropdown();
             // statusChart = generateBarChart();
@@ -433,12 +478,18 @@ $( document ).ready(function(){
 
 $('#regionSelect').on('change', function(e){
     var select = $('#regionSelect').val();
-    select != "All regions" ? filteredCfmData = cfmData.filter(function(d){ return d['Region'] == select ; }) : filteredCfmData = cfmData;
+    select != "All regions" ? filteredCfmData = cfmData.filter(function(d){ return d['Region'] == select ; }) : 
+    filteredCfmData = cfmData;
     filteredCfmData.forEach(element => {
         countriesISO3Arr.includes(element['ISO3']) ? '' : countriesISO3Arr.push(element['ISO3']);
     });
     updateViz();
     // zoom to region 
+    if (select == 'All regions') {
+        mapsvg.transition()
+        .duration(750)
+        .call(zoom.transform, d3.zoomIdentity);
+    }
     // zoomToRegion(select);
     // reset layers selection to all
     $('#all').prop('checked', true);

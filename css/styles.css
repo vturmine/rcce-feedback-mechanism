@@ -1077,7 +1077,7 @@ body {
   padding-bottom: 10px; }
 
 h2 {
-  padding-top: 10px;
+  padding-top: 5px;
   font-family: "Source Sans Pro", sans-serif;
   font-size: 22px;
   line-height: 22px;
@@ -1095,7 +1095,7 @@ h2 {
   width: 100%;
   height: 500px;
   padding-top: 10px;
-  fill: #a6d8e8;
+  fill: #cdd4d9;
   position: relative; }
   #map .zoom-controls {
     position: absolute;
@@ -1208,7 +1208,7 @@ h2 {
     font-weight: bold; }
 
 #datatable.dataTable td {
-  font-size: 14px; }
+  font-size: 13px; }
   #datatable.dataTable td .Active {
     color: "#2F9C67"; }
   #datatable.dataTable td .Inactive {
