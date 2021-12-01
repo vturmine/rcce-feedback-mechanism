@@ -3,9 +3,9 @@ let ifrcPink_1 = '#D90368', ifrcPink_2 = '#E27093', ifrcPink_3 = '#E996AD', ifrc
 let ifrcGreen_1 = '#2F9C67', ifrcGreen_2 = '#78B794', ifrcGreen_3 = '#9EC8AE', ifrcGreen_4 = '#C2DACA', ifrcGreen_5 = '#E9F1EA';
 let ifrcBlue_1 = '#204669', ifrcBlue_2 = '#546B89', ifrcBlue_3 = '#798BA5', ifrcBlue_4 = '#A6B0C3', ifrcBlue_5 = '#DBDEE6';
 let ifrcYellow = '#FCCF9E';
-let mapActiveColor = ifrcGreen_1,
-    mapInactiveColor = ifrcGreen_5,//'#d1021a',
-    mapPipelineColor = ifrcGreen_3;
+let mapActiveColor = '#2F9C67',
+    mapInactiveColor = '#C2DACA',//'#d1021a',
+    mapPipelineColor = '#78B794';
 
 var mapColorRangeDefault = [ifrcBlue_3, ifrcBlue_2, ifrcBlue_1];
 // let mapInactive = '#a6d8e8';
