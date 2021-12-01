@@ -68,10 +68,10 @@ function getDataTableData(data = filteredCfmData){
                     '<i class="fa fa-circle fa-md" style="color:'+cfmstatusColor+';"></i>',
                     element['Country'], element['Organisation Name'], 
                     element['Perception'] != "" ? element['Perception'] : "-", 
-                    element['Suggestion'] != "" ? element['Suggestion'] : "-", 
-                    element['Rumour tracking'] != "" ? element['Rumour tracking'] : "-", 
+                    element['Suggestions'] != "" ? element['Suggestions'] : "-", 
+                    element['Rumors'] != "" ? element['Rumors'] : "-", 
                     element['Questions'] !="" ? element['Questions'] : "-", 
-                    element['Complaint'] != "" ? element['Complaint'] : "-", 
+                    element['Complaints'] != "" ? element['Complaints'] : "-", 
                     element['Accountability'] != "" ? element['Accountability'] : "-", 
                     //link with icone
                     element['Link'] != "" ? '<a href="'+element['Link']+'" target="blank"><i class="fa fa-download fa-sm"></i></a>' : "-"
