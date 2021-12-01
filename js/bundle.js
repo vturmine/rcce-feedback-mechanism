@@ -4,9 +4,9 @@ let ifrcPink_1 = '#D90368', ifrcPink_2 = '#E27093', ifrcPink_3 = '#E996AD', ifrc
 let ifrcGreen_1 = '#2F9C67', ifrcGreen_2 = '#78B794', ifrcGreen_3 = '#9EC8AE', ifrcGreen_4 = '#C2DACA', ifrcGreen_5 = '#E9F1EA';
 let ifrcBlue_1 = '#204669', ifrcBlue_2 = '#546B89', ifrcBlue_3 = '#798BA5', ifrcBlue_4 = '#A6B0C3', ifrcBlue_5 = '#DBDEE6';
 let ifrcYellow = '#FCCF9E';
-let mapActiveColor = ifrcBlue_1,
-    mapInactiveColor = ifrcBlue_3,//'#d1021a',
-    mapPipelineColor = ifrcBlue_5;
+let mapActiveColor = ifrcGreen_1,
+    mapInactiveColor = ifrcGreen_5,//'#d1021a',
+    mapPipelineColor = ifrcGreen_3;
 
 var mapColorRangeDefault = [ifrcBlue_3, ifrcBlue_2, ifrcBlue_1];
 // let mapInactive = '#a6d8e8';
@@ -63,8 +63,8 @@ function getDataTableData(data = filteredCfmData){
     var dtData = [];
     data.forEach(element => {
         var cfmstatusColor = ifrcGreen_1;
-        element['Status'] == "Inactive" ? cfmstatusColor =  ifrcPink_1 : 
-        element['Status'] == "Pipeline" ? cfmstatusColor =  ifrcYellow : null;
+        element['Status'] == "Inactive" ? cfmstatusColor =  ifrcGreen_5 : 
+        element['Status'] == "Pipeline" ? cfmstatusColor =  ifrcGreen_3 : null;
         dtData.push([
                     '<i class="fa fa-circle fa-md" style="color:'+cfmstatusColor+';"></i>',
                     element['Country'], element['Organisation Name'], 
@@ -347,9 +347,9 @@ function initiateMap() {
           element['Status'] == 'Pipeline' ? numPipeline++ : null;
         });
         content += '<div>' +
-              '<div><label><i class="fa fa-circle fa-sm" style="color:#2F9C67;"></i> Active ('+numActive+')</label></div>' +
-              '<div><label><i class="fa fa-circle fa-sm" style="color:#d1021a;"></i> Pipeline ('+numPipeline+')</label></div>' +
-              '<div><label><i class="fa fa-circle fa-sm" style="color:#FCCF9E;"></i> Iinactive ('+numInactive+')</label></div>' +
+              '<div><label><i class="fa fa-circle fa-sm" style="color:#2F9C67;"></i> Active: '+numActive+'</label></div>' +
+              '<div><label><i class="fa fa-circle fa-sm" style="color:#9EC8AE;"></i> Pipeline: '+numPipeline+'</label></div>' +
+              '<div><label><i class="fa fa-circle fa-sm" style="color:#E9F1EA;"></i> Inactive: '+numInactive+'</label></div>' +
               '</div>';
 
         showMapTooltip(d, maptip, content);
