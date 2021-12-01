@@ -98,9 +98,9 @@ function initiateMap() {
           element['Status'] == 'Pipeline' ? numPipeline++ : null;
         });
         content += '<div>' +
-              '<div><label><i class="fa fa-circle fa-sm" style="color:#2F9C67;"></i> Active ('+numActive+')</label></div>' +
-              '<div><label><i class="fa fa-circle fa-sm" style="color:#d1021a;"></i> Pipeline ('+numPipeline+')</label></div>' +
-              '<div><label><i class="fa fa-circle fa-sm" style="color:#FCCF9E;"></i> Iinactive ('+numInactive+')</label></div>' +
+              '<div><label><i class="fa fa-circle fa-sm" style="color:#2F9C67;"></i> Active: '+numActive+'</label></div>' +
+              '<div><label><i class="fa fa-circle fa-sm" style="color:#9EC8AE;"></i> Pipeline: '+numPipeline+'</label></div>' +
+              '<div><label><i class="fa fa-circle fa-sm" style="color:#E9F1EA;"></i> Inactive: '+numInactive+'</label></div>' +
               '</div>';
 
         showMapTooltip(d, maptip, content);

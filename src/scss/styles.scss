@@ -31,7 +31,7 @@ h2 {
   height: 500px;
   padding-top: 10px;
   // fill: #a6d8e8;
-  fill: #cdd4d9;
+  fill: #e7eaed;
   position: relative;
   .zoom-controls {
     position: absolute;
@@ -86,12 +86,12 @@ h2 {
     }
     #inactive {
       i {
-        color: #d1021a;
+        color: #e9f1ea;
       }
     }
     #pipeline {
       i {
-        color: #fccf9e;
+        color: #9ec8ae;
       }
     }
     h5 {
@@ -102,8 +102,8 @@ h2 {
   }
 }
 #countries {
-  stroke: #fff;
-  stroke-width: 0.1;
+  stroke: #ccc;
+  stroke-width: 0.01;
 }
 #countries path {
   cursor: pointer;
@@ -189,10 +189,10 @@ h2 {
     color: "#2F9C67";
   }
   .Inactive {
-    color: "#D90368";
+    color: "#E9F1EA";
   }
   .Pipeline {
-    color: "#FCCF9E";
+    color: "#9EC8AE";
   }
   // line-height: 21px;
 }
