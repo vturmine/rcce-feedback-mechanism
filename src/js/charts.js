@@ -94,7 +94,7 @@ function generateDataTable(){
         //     {"width": "1%"},
         //     {"width": "1%"}
         // ],
-        "pageLength": 5,
+        "pageLength": 10,
         "bLengthChange": false,
         "pagingType": "simple_numbers",
         "order":[[1, 'asc']],
